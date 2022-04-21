@@ -46,6 +46,26 @@ defmodule Sntx.Models.BlogPostTest do
     end
   end
 
+  describe "update/1" do
+    test "should not update a nonexisting BlogPost" do
+      assert {:error, "does not exist"} = BlogPost.update(%{id: UUID.generate()})
+    end
+
+    test "should not update a BlogPost with invalid attributes" do
+      %{id: id} = insert(:blog_post)
+
+      assert {:error, changeset} = BlogPost.update(%{id: id, title: nil})
+      assert %{title: ["can't be blank"]} = errors_on(changeset)
+    end
+
+    test "should update a BlogPost" do
+      %{id: id} = insert(:blog_post)
+      title = "New Title"
+
+      assert {:ok, %{id: ^id, title: ^title}} = BlogPost.update(%{id: id, title: title})
+    end
+  end
+
   describe "delete/1" do
     test "should not delete a nonexisting BlogPost" do
       assert {:error, "does not exist"} = BlogPost.delete(UUID.generate())

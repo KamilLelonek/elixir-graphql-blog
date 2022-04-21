@@ -30,4 +30,19 @@ defmodule Sntx.Models.BlogPost do
       nil -> {:error, "does not exist"}
     end
   end
+
+  def update(attrs) do
+    case Repo.get(__MODULE__, attrs[:id]) do
+      %__MODULE__{} = blog_post -> update(blog_post, attrs)
+      nil -> {:error, "does not exist"}
+    end
+  end
+
+  defp update(blog_post, attrs) do
+    blog_post
+    |> cast(attrs, @attrs ++ [:id])
+    |> validate_required(@attrs ++ [:id])
+    |> foreign_key_constraint(:author_id)
+    |> Repo.update()
+  end
 end
