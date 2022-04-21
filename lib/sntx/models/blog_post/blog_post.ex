@@ -26,14 +26,7 @@ defmodule Sntx.Models.BlogPost do
 
   def delete(blog_post), do: Repo.delete(blog_post)
 
-  def update(attrs) do
-    case Repo.get(__MODULE__, attrs[:id]) do
-      %__MODULE__{} = blog_post -> update(blog_post, attrs)
-      nil -> {:error, "does not exist"}
-    end
-  end
-
-  defp update(blog_post, attrs) do
+  def update(blog_post, attrs) do
     blog_post
     |> cast(attrs, @attrs ++ [:id])
     |> validate_required(@attrs ++ [:id])
