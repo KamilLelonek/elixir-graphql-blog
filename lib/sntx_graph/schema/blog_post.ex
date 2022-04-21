@@ -15,6 +15,6 @@ defmodule SntxGraph.Schema.BlogPost do
   input_object :blog_post_create_input do
     field :title, non_null(:string)
     field :body, non_null(:string)
-    field :auhtor_id, non_null(:uuid4)
+    field :author_id, non_null(:uuid4)
   end
 end
