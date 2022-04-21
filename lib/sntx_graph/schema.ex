@@ -19,6 +19,7 @@ defmodule SntxGraph.Schema do
   import_types(Mutations.Users.Accounts)
   import_types(Mutations.Users.Auth)
   import_types(Mutations.Users.Passwords)
+  import_types(Mutations.BlogPosts)
 
   import_types(Queries.Users)
   import_types(Queries.BlogPosts)
@@ -27,6 +28,7 @@ defmodule SntxGraph.Schema do
     import_fields(:user_account_mutations)
     import_fields(:user_auth_mutations)
     import_fields(:user_password_mutations)
+    import_fields(:blog_post_mutations)
   end
 
   query do
