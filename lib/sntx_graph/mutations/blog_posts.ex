@@ -4,10 +4,13 @@ defmodule SntxGraph.Mutations.BlogPosts do
   import SntxWeb.Payload
 
   alias Sntx.Models.BlogPost
+  alias SntxGraph.Middleware.Authorize
 
   object :blog_post_mutations do
     field :blog_post_create, :blog_post_payload do
       arg :input, non_null(:blog_post_create_input)
+
+      middleware(Authorize)
 
       resolve(fn %{input: input} = _args, _ ->
         case BlogPost.create(input) do
