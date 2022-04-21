@@ -24,6 +24,19 @@ defmodule SntxGraph.Mutations.BlogPostsTest do
     }
   """
 
+  @blog_post_delete """
+    mutation q($id: UUID4!) {
+      blogPostDelete(id: $id) {
+        messages {
+          message
+        }
+        result {
+          #{@blog_post}
+        }
+      }
+    }
+  """
+
   describe "blogPostCreate" do
     test "should not create a BlogPost with an invalid Author ID", %{conn: conn} do
       assert conn
@@ -46,6 +59,33 @@ defmodule SntxGraph.Mutations.BlogPostsTest do
                |> post("/graphql", %{
                  "query" => @blog_post_create,
                  "variables" => %{"input" => %{"title" => "Title", "body" => "Body", "authorId" => author_id}}
+               })
+               |> json_response(200)
+    end
+  end
+
+  describe "blogPostDelete" do
+    test "should not delete any BlogPost", %{conn: conn} do
+      assert conn
+             |> authorize()
+             |> post("/graphql", %{
+               "query" => @blog_post_delete,
+               "variables" => %{id: UUID.generate()}
+             })
+             |> json_response(200) == %{
+               "data" => %{"blogPostDelete" => %{"result" => nil, "messages" => [%{"message" => "does not exist"}]}}
+             }
+    end
+
+    test "should delete s BlogPost", %{conn: conn} do
+      %{id: id} = insert(:blog_post)
+
+      assert %{"data" => %{"blogPostDelete" => %{"result" => %{"author" => %{}}}}} =
+               conn
+               |> authorize()
+               |> post("/graphql", %{
+                 "query" => @blog_post_delete,
+                 "variables" => %{id: id}
                })
                |> json_response(200)
     end
