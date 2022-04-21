@@ -79,12 +79,12 @@ defmodule SntxGraph.Mutations.BlogPostsTest do
 
   describe "blogPostUpdate" do
     test "should update a BlogPost", %{conn: conn} do
-      %{id: id} = insert(:blog_post)
+      %{id: id, author: account} = insert(:blog_post)
       title = "New Title"
 
       assert %{"data" => %{"blogPostUpdate" => %{"result" => %{"title" => ^title}}}} =
                conn
-               |> authorize()
+               |> authorize(account)
                |> post("/graphql", %{
                  "query" => @blog_post_update,
                  "variables" => %{"input" => %{"id" => id, "title" => title}}
@@ -102,6 +102,25 @@ defmodule SntxGraph.Mutations.BlogPostsTest do
                })
                |> json_response(200)
     end
+
+    test "should not update a BlogPost of a different user", %{conn: conn} do
+      %{id: id} = insert(:blog_post)
+
+      assert conn
+             |> authorize()
+             |> post("/graphql", %{
+               "query" => @blog_post_update,
+               "variables" => %{"input" => %{"id" => id}}
+             })
+             |> json_response(200) == %{
+               "data" => %{
+                 "blogPostUpdate" => %{
+                   "result" => nil,
+                   "messages" => [%{"message" => "Current User is not BlogPost owner"}]
+                 }
+               }
+             }
+    end
   end
 
   describe "blogPostDelete" do
@@ -118,8 +137,7 @@ defmodule SntxGraph.Mutations.BlogPostsTest do
     end
 
     test "should delete a BlogPost", %{conn: conn} do
-      account = insert(:account)
-      %{id: id} = insert(:blog_post, author: account)
+      %{id: id, author: account} = insert(:blog_post)
 
       assert %{"data" => %{"blogPostDelete" => %{"result" => %{"author" => %{}}}}} =
                conn

@@ -10,9 +10,11 @@ defmodule SntxGraph.Resolvers.BlogPostResolver do
     end
   end
 
-  def update(%{input: input}, %{context: %{user: _user}}) do
-    case BlogPost.update(input) do
-      {:ok, blog_post} -> {:ok, blog_post}
+  def update(%{input: %{id: id} = input}, %{context: %{user: %{id: author_id}}}) do
+    case Repo.get(BlogPost, id) do
+      %BlogPost{author_id: ^author_id} = blog_post -> BlogPost.update(blog_post, input)
+      %BlogPost{} -> {:error, "Current User is not BlogPost owner"}
+      nil -> {:error, "does not exist"}
       error -> mutation_error_payload(error)
     end
   end
