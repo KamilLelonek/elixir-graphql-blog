@@ -23,4 +23,11 @@ defmodule Sntx.Models.BlogPost do
     |> foreign_key_constraint(:author_id)
     |> Repo.insert()
   end
+
+  def delete(id) do
+    case Repo.get(__MODULE__, id) do
+      %__MODULE__{} = blog_post -> Repo.delete(blog_post)
+      nil -> {:error, "does not exist"}
+    end
+  end
 end

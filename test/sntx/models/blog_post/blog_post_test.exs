@@ -45,4 +45,16 @@ defmodule Sntx.Models.BlogPostTest do
       assert %{title: ["can't be blank"]} = errors_on(changeset)
     end
   end
+
+  describe "delete/1" do
+    test "should not delete a nonexisting BlogPost" do
+      assert {:error, "does not exist"} = BlogPost.delete(UUID.generate())
+    end
+
+    test "should delete a BlogPost" do
+      %{id: id} = insert(:blog_post)
+
+      assert {:ok, %{id: ^id}} = BlogPost.delete(id)
+    end
+  end
 end
