@@ -17,6 +17,8 @@ defmodule SntxWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  import Sntx.Factory
+
   using do
     quote do
       # Import conveniences for testing with connections
@@ -41,5 +43,11 @@ defmodule SntxWeb.ConnCase do
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}
+  end
+
+  def authorize(conn, account \\ insert(:account)) do
+    {:ok, token, _} = Sntx.Guardian.encode_and_sign(account)
+
+    Plug.Conn.put_req_header(conn, "authorization", token)
   end
 end
