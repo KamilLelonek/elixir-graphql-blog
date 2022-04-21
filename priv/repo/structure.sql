@@ -167,7 +167,7 @@ CREATE UNIQUE INDEX user_accounts__lower_email_index ON public.user_accounts USI
 --
 
 ALTER TABLE ONLY public.blog_posts
-    ADD CONSTRAINT blog_posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.blog_posts(id);
+    ADD CONSTRAINT blog_posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.user_accounts(id);
 
 
 --

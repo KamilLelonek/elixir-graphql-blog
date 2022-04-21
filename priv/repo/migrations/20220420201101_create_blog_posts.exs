@@ -8,7 +8,7 @@ defmodule Sntx.Repo.Migrations.CreateBlogPosts do
       add(:title, :string)
       add(:body, :citext)
 
-      add :author_id, references(:blog_posts, type: :binary_id)
+      add :author_id, references(:user_accounts, type: :binary_id)
 
       timestamps()
     end
