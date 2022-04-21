@@ -1,4 +1,4 @@
-# Elixir GraphQL Boilerplate
+# Elixir GraphQL Blog
 
 ### Stack
 
