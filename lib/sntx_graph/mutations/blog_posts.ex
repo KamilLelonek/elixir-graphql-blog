@@ -12,8 +12,21 @@ defmodule SntxGraph.Mutations.BlogPosts do
 
       middleware(Authorize)
 
-      resolve(fn %{input: input} = _args, _ ->
+      resolve(fn %{input: input}, _ ->
         case BlogPost.create(input) do
+          {:ok, blog_post} -> {:ok, blog_post}
+          error -> mutation_error_payload(error)
+        end
+      end)
+    end
+
+    field :blog_post_delete, :blog_post_payload do
+      arg :id, :uuid4
+
+      middleware(Authorize)
+
+      resolve(fn %{id: id}, _ ->
+        case BlogPost.delete(id) do
           {:ok, blog_post} -> {:ok, blog_post}
           error -> mutation_error_payload(error)
         end
