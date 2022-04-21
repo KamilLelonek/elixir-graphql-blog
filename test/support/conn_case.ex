@@ -23,7 +23,9 @@ defmodule SntxWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import SntxWeb.ConnCase
+      import Sntx.Factory
 
+      alias Ecto.UUID
       alias SntxWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
