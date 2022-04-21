@@ -24,12 +24,7 @@ defmodule Sntx.Models.BlogPost do
     |> Repo.insert()
   end
 
-  def delete(id) do
-    case Repo.get(__MODULE__, id) do
-      %__MODULE__{} = blog_post -> Repo.delete(blog_post)
-      nil -> {:error, "does not exist"}
-    end
-  end
+  def delete(blog_post), do: Repo.delete(blog_post)
 
   def update(attrs) do
     case Repo.get(__MODULE__, attrs[:id]) do

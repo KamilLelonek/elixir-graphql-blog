@@ -67,15 +67,11 @@ defmodule Sntx.Models.BlogPostTest do
   end
 
   describe "delete/1" do
-    test "should not delete a nonexisting BlogPost" do
-      assert {:error, "does not exist"} = BlogPost.delete(UUID.generate())
-    end
-
     test "should delete a BlogPost" do
-      %{id: id} = insert(:blog_post)
+      blog_post = %{id: id} = insert(:blog_post)
 
       assert [%{id: ^id}] = Repo.all(BlogPost)
-      assert {:ok, %{id: ^id}} = BlogPost.delete(id)
+      assert {:ok, %{id: ^id}} = BlogPost.delete(blog_post)
       assert Repo.all(BlogPost) == []
     end
   end
