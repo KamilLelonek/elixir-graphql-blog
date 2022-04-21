@@ -2,8 +2,11 @@ defmodule SntxGraph.Schema.BlogPost do
   use Absinthe.Schema.Notation
 
   import Absinthe.Resolution.Helpers, only: [dataloader: 1]
+  import AbsintheErrorPayload.Payload
 
   alias SntxGraph.BasicDataloader
+
+  payload_object(:blog_post_payload, :blog_post)
 
   object :blog_post do
     field :id, :uuid4
