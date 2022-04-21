@@ -1,7 +1,11 @@
 defmodule Sntx.Models.BlogPost do
   use Sntx.Models
 
-  alias Sntx.Models.User.Account
+  import Ecto.Changeset
+
+  alias Sntx.{Models.User.Account, Repo}
+
+  @attrs ~w(title body author_id)a
 
   schema "blog_posts" do
     field :title, :string
@@ -10,5 +14,13 @@ defmodule Sntx.Models.BlogPost do
     belongs_to :author, Account
 
     timestamps()
+  end
+
+  def create(attrs) do
+    %__MODULE__{}
+    |> cast(attrs, @attrs)
+    |> validate_required(@attrs)
+    |> foreign_key_constraint(:author_id)
+    |> Repo.insert()
   end
 end
