@@ -27,6 +27,7 @@ defmodule SntxGraph.Mutations.BlogPostsTest do
   describe "blogPostCreate" do
     test "should not create a BlogPost with an invalid Author ID", %{conn: conn} do
       assert conn
+             |> authorize()
              |> post("/graphql", %{
                "query" => @blog_post_create,
                "variables" => %{"input" => %{"title" => "Title", "body" => "Body", "authorId" => UUID.generate()}}
@@ -37,10 +38,11 @@ defmodule SntxGraph.Mutations.BlogPostsTest do
     end
 
     test "should create a BlogPost", %{conn: conn} do
-      %{id: author_id} = insert(:account)
+      account = %{id: author_id} = insert(:account)
 
       assert %{"data" => %{"blogPostCreate" => %{"result" => %{"author" => %{}}}}} =
                conn
+               |> authorize(account)
                |> post("/graphql", %{
                  "query" => @blog_post_create,
                  "variables" => %{"input" => %{"title" => "Title", "body" => "Body", "authorId" => author_id}}
