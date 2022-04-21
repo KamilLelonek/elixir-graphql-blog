@@ -24,6 +24,9 @@ defmodule Sntx.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Sntx.DataCase
+      import Sntx.Factory
+
+      alias Ecto.UUID
     end
   end
 
