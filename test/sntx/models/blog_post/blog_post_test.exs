@@ -54,7 +54,9 @@ defmodule Sntx.Models.BlogPostTest do
     test "should delete a BlogPost" do
       %{id: id} = insert(:blog_post)
 
+      assert [%{id: ^id}] = Repo.all(BlogPost)
       assert {:ok, %{id: ^id}} = BlogPost.delete(id)
+      assert Repo.all(BlogPost) == []
     end
   end
 end
