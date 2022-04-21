@@ -11,6 +11,7 @@ defmodule SntxGraph.Schema do
 
   import_types(Schema.Custom)
   import_types(Schema.User)
+  import_types(Schema.BlogPost)
 
   import_types(Types.UUID4)
   import_types(Types.Json)
@@ -20,6 +21,7 @@ defmodule SntxGraph.Schema do
   import_types(Mutations.Users.Passwords)
 
   import_types(Queries.Users)
+  import_types(Queries.BlogPosts)
 
   mutation do
     import_fields(:user_account_mutations)
@@ -29,6 +31,7 @@ defmodule SntxGraph.Schema do
 
   query do
     import_fields(:user_queries)
+    import_fields(:blog_post_queries)
   end
 
   def middleware(middleware, _field, %Absinthe.Type.Object{identifier: :mutation}) do
