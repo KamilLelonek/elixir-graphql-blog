@@ -1,16 +1,28 @@
 defmodule SntxGraph.Queries.BlogPostsTest do
   use SntxWeb.ConnCase
 
+  @blog_post """
+    title
+    body
+    author {
+      firstName
+      lastName
+      publicEmail
+    }
+  """
+
   @blog_post_query """
     query q($id: UUID4!) {
       blogPost(id: $id) {
-        title
-        body
-        author {
-          firstName
-          lastName
-          publicEmail
-        }
+        #{@blog_post}
+      }
+    }
+  """
+
+  @blog_posts_query """
+    query {
+      blogPosts {
+        #{@blog_post}
       }
     }
   """
@@ -46,6 +58,24 @@ defmodule SntxGraph.Queries.BlogPostsTest do
                  "query" => @blog_post_query,
                  "variables" => %{id: id}
                })
+               |> json_response(200)
+    end
+  end
+
+  describe "blogPosts" do
+    test "should not query any BlogPost", %{conn: conn} do
+      assert conn
+             |> post("/graphql", %{"query" => @blog_posts_query})
+             |> json_response(200) == %{"data" => %{"blogPosts" => []}}
+    end
+
+    test "should query all BlogPosts", %{conn: conn} do
+      insert(:blog_post)
+      insert(:blog_post)
+
+      assert %{"data" => %{"blogPosts" => [%{"author" => _, "body" => _, "title" => _}, _]}} =
+               conn
+               |> post("/graphql", %{"query" => @blog_posts_query})
                |> json_response(200)
     end
   end
